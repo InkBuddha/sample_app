@@ -12,20 +12,20 @@ class MicropostInterfaceTest < ActionDispatch::IntegrationTest
   	assert_select 'div.pagination'
   	# Invalid submission
   	assert_no_difference 'Micropost.count' do
-  		post micropost_path, micropost: { content: "" }
+  		post microposts_path, micropost: { content: "" }
   	end
   	assert_select 'div#error_explanation'
   	# Valid submission
   	content = "This micropost really ties the room together"
   	assert_difference 'Micropost.count', 1 do
-  		post micropost_path, micropost: { content: content }
+  		post microposts_path, micropost: { content: content }
   	end
   	assert_redirected_to root_url
   	follow_redirect!
   	assert_match content, response.body
   	# Delete a post.
   	assert_select 'a', text: 'delete'
-  	first_micropost = @user.microposts.paginate(page: 1).first_micropost
+  	first_micropost = @user.microposts.paginate(page: 1).first
   	assert_difference 'Micropost.count', -1 do
   		delete micropost_path(first_micropost)
   	end
